@@ -1,0 +1,70 @@
+version: "3.9"
+
+services:
+    database:
+        image: percona/percona-server:8.0
+        container_name: glpi-database
+        volumes:
+            - database.data:/var/lib/mysql
+        environment:
+            - MYSQL_USER=FQi87Ngkyh7oed6od4K6
+            - MYSQL_PASSWORD=
+            - MYSQL_DATABASE=7GpkMBY6rtjoTrTKbkQ6
+            - MYSQL_ROOT_PASSWORD=
+            - TZ=Europe/Warsaw
+        networks:
+            - default
+        restart: always
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-authentication-plugin=mysql_native_password
+
+    application:
+        build:
+            context: .
+            args:
+                GLPI_VERSION: 10.0.5
+        container_name: glpi-application
+        volumes:
+            - application.apache.log:/var/lib/docker-agent/log/apache
+            - application.config:/var/www/glpi/config
+            - application.install:/var/www/glpi/install
+            - application.files:/var/www/glpi/files
+            - application.marketplace:/var/www/glpi/marketplace
+            - application.plugins:/var/www/glpi/plugins
+        labels:
+            - traefik.enable=true
+            - traefik.port=80
+            - traefik.http.routers.glpi.rule=Host(`localhost`)
+            - traefik.http.routers.glpi.tls=false
+        networks:
+            - default
+        restart: always
+        depends_on:
+            - database
+
+    reverse-proxy:
+        image: traefik:2.6.3
+        container_name: glpi-reverse-proxy
+        ports:
+            - "80:80"
+        volumes:
+            - ./conf/traefik:/etc/traefik
+            - ./certificates:/certificates
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        networks:
+            - default
+        restart: always
+
+volumes:
+    database.data:
+    application.apache.log:
+    application.config:
+    application.install:
+    application.files:
+    application.marketplace:
+    application.plugins:
+
+networks:
+    default:
+        driver: bridge
+        name: glpi-network
+        external: false
