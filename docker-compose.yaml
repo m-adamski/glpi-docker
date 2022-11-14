@@ -24,7 +24,7 @@ services:
                 GLPI_VERSION: 10.0.5
         container_name: glpi-application
         volumes:
-            - application.apache.log:/var/lib/docker-agent/log/apache
+            - application.nginx.log:/var/lib/docker-agent/log/nginx
             - application.config:/var/www/glpi/config
             - application.install:/var/www/glpi/install
             - application.files:/var/www/glpi/files
@@ -56,7 +56,7 @@ services:
 
 volumes:
     database.data:
-    application.apache.log:
+    application.nginx.log:
     application.config:
     application.install:
     application.files:

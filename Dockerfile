@@ -2,7 +2,7 @@ FROM php:8.1.11-fpm
 
 EXPOSE 80/TCP
 
-VOLUME /var/lib/docker-agent/log/apache
+VOLUME /var/lib/docker-agent/log/nginx
 VOLUME /var/www/glpi/config
 VOLUME /var/www/glpi/install
 VOLUME /var/www/glpi/files
@@ -48,8 +48,8 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 # Prepare directories for configuration files
 RUN mkdir -p /var/lib/docker-agent/config && \
     mkdir -p /var/lib/docker-agent/config/glpi && \
-    mkdir -p /var/lib/docker-agent/log/apache && \
-    chown -R www-data:www-data /var/lib/docker-agent/log/apache
+    mkdir -p /var/lib/docker-agent/log/nginx && \
+    chown -R www-data:www-data /var/lib/docker-agent/log/nginx
 
 # Services configuration
 COPY ./conf/php/custom.ini /usr/local/etc/php/conf.d/zzz-custom.ini
