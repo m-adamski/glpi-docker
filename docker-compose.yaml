@@ -25,9 +25,10 @@ services:
         container_name: glpi-application
         volumes:
             - application.nginx.log:/var/lib/docker-agent/log/nginx
-            - application.config:/var/www/glpi/config
+            - application.config:/var/lib/docker-agent/config/glpi
+            - application.file:/var/lib/docker-agent/lib/glpi
+            - application.log:/var/lib/docker-agent/log/glpi
             - application.install:/var/www/glpi/install
-            - application.files:/var/www/glpi/files
             - application.marketplace:/var/www/glpi/marketplace
             - application.plugins:/var/www/glpi/plugins
         labels:
@@ -58,8 +59,9 @@ volumes:
     database.data:
     application.nginx.log:
     application.config:
+    application.file:
+    application.log:
     application.install:
-    application.files:
     application.marketplace:
     application.plugins:
 
